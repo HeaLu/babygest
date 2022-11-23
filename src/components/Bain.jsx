@@ -1,14 +1,14 @@
 import { Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { differenceInHours, format, isAfter } from "date-fns";
-import FastfoodIcon from "@mui/icons-material/Fastfood";
+import BathtubIcon from '@mui/icons-material/Bathtub';
 import durationToString from "../lib/durationToString";
 import TimePicker from "./TimePicker";
 import axiosInstance from "../lib/axiosInstance";
 import { useSnackbar } from "notistack";
 import DateTimePicker from "./DateTimePicker";
 
-const Biberon = () => {
+const Bain = () => {
   const [date, setDate] = useState(new Date());
   const [now, setNow] = useState(new Date())
   const [last, setLast] = useState({ date: new Date() })
@@ -16,12 +16,12 @@ const Biberon = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
-    setTimeout(() => { setNow(new Date()) }, 60000)
+    setTimeout(() => { setNow(new Date()) }, 3600000)
   }, [now])
 
   useEffect(() => {
     const fetchLast = async () => {
-      const data = await axiosInstance.get('/biberon/getlast')
+      const data = await axiosInstance.get('/bain/getlast')
       setLast({ date: new Date(data.date) })
     }
 
@@ -37,7 +37,7 @@ const Biberon = () => {
   }
 
   const handleSubmit = async () => {
-    const data = await axiosInstance.post('/biberon/add', { date })
+    const data = await axiosInstance.post('/bain/add', { date })
     if (isAfter(date, last.date)) setLast({ date: new Date(data.date) })
   }
 
@@ -48,14 +48,14 @@ const Biberon = () => {
         alignItems="center"
         spacing={1}
       >
-        <FastfoodIcon />
+        <BathtubIcon />
         <Typography variant="h6" component="div">
-          Biberon
+          Bain
         </Typography>
       </Stack>
       <Typography>
-        Dernier biberon il y a{" "}
-        {durationToString({ start: last.date, end: now })} ({format(last.date, "H:mm")})
+        Dernier bain il y a{" "}
+        {durationToString({ start: last.date, end: now, format: ["days", "hours"] })}
       </Typography>
       <Stack
         direction="row"
@@ -65,12 +65,12 @@ const Biberon = () => {
       >
         {suspiciousDate ? (
           <DateTimePicker
-            label="Miam miam"
+            label="Glou glou"
             value={date}
             onChange={handleChangeDate} />
         ) : (
           <TimePicker
-            label="Miam miam"
+            label="Glou glou"
             value={date}
             onChange={handleChangeDate}
           />
@@ -86,4 +86,4 @@ const Biberon = () => {
   );
 };
 
-export default Biberon;
+export default Bain;

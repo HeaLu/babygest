@@ -9,7 +9,7 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import ChildCareIcon from "@mui/icons-material/ChildCare";
+import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 import Image from "next/image";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -35,7 +35,7 @@ const Bar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <ChildCareIcon sx={{ display: "flex", mr: 1 }} />
+          <FamilyRestroomIcon sx={{ display: "flex", mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -54,12 +54,12 @@ const Bar = () => {
           >
             {process.env.NEXT_PUBLIC_PRENOM}
           </Typography>
-          {user.image && (
+          {user.prenom !== "" && (
             <Box>
               <Tooltip title={user.prenom || "Utilisateur"}>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt={user.prenom}>
-                    <Image sizes="" src={user.image} alt={user.prenom} fill />
+                    <Image src={user.image} alt={user.prenom || ""} fill />
                   </Avatar>
                 </IconButton>
               </Tooltip>

@@ -1,32 +1,17 @@
-import { Button, Stack, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { differenceInHours, format, isAfter } from "date-fns";
-import FastfoodIcon from "@mui/icons-material/Fastfood";
-import durationToString from "../lib/durationToString";
+import { Button, Checkbox, FormControlLabel, Stack, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { differenceInHours } from "date-fns";
+import MessageIcon from '@mui/icons-material/Message';
 import TimePicker from "./TimePicker";
 import axiosInstance from "../lib/axiosInstance";
 import { useSnackbar } from "notistack";
 import DateTimePicker from "./DateTimePicker";
 
-const Biberon = () => {
+const Evenement = () => {
   const [date, setDate] = useState(new Date());
-  const [now, setNow] = useState(new Date())
-  const [last, setLast] = useState({ date: new Date() })
+  const [message, setMessage] = useState("");
   const [suspiciousDate, setSuspiciousDate] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
-
-  useEffect(() => {
-    setTimeout(() => { setNow(new Date()) }, 60000)
-  }, [now])
-
-  useEffect(() => {
-    const fetchLast = async () => {
-      const data = await axiosInstance.get('/biberon/getlast')
-      setLast({ date: new Date(data.date) })
-    }
-
-    fetchLast()
-  }, [])
 
   const handleChangeDate = (newHour) => {
     if (differenceInHours(new Date(), newHour) !== 0 && !suspiciousDate) {
@@ -37,8 +22,8 @@ const Biberon = () => {
   }
 
   const handleSubmit = async () => {
-    const data = await axiosInstance.post('/biberon/add', { date })
-    if (isAfter(date, last.date)) setLast({ date: new Date(data.date) })
+    await axiosInstance.post('/evenement/add', { date, message })
+    setMessage("")
   }
 
   return (
@@ -48,15 +33,11 @@ const Biberon = () => {
         alignItems="center"
         spacing={1}
       >
-        <FastfoodIcon />
+        <MessageIcon />
         <Typography variant="h6" component="div">
-          Biberon
+          Evènement
         </Typography>
       </Stack>
-      <Typography>
-        Dernier biberon il y a{" "}
-        {durationToString({ start: last.date, end: now })} ({format(last.date, "H:mm")})
-      </Typography>
       <Stack
         direction="row"
         spacing={2}
@@ -65,17 +46,18 @@ const Biberon = () => {
       >
         {suspiciousDate ? (
           <DateTimePicker
-            label="Miam miam"
+            label="Quand"
             value={date}
             onChange={handleChangeDate} />
         ) : (
           <TimePicker
-            label="Miam miam"
+            label="Quand"
             value={date}
             onChange={handleChangeDate}
           />
         )
         }
+        <TextField label="Message" value={message} onChange={(e) => setMessage(e.target.value)} multiline />
         <Button
           onClick={handleSubmit}
         >
@@ -86,4 +68,4 @@ const Biberon = () => {
   );
 };
 
-export default Biberon;
+export default Evenement;

@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 const Main = ({ children }) => {
-  const { auth } = useContext(UserContext);
+  const { user, auth } = useContext(UserContext);
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -14,15 +14,14 @@ const Main = ({ children }) => {
     }
   }, [session, auth]);
 
-  useEffect(() => {});
+  useEffect(() => {
+    if (router.isReady && !session)
+      router.push("/auth/signin?origin=" + router.asPath);
+  });
 
-  if (!router.isReady) {
-    return <></>;
-  } else if (!session) {
-    router.push("/auth/signin?origin=" + router.asPath);
-  } else {
-    return <>{children}</>;
-  }
+  if (user.email)
+    return <>{children}</>
+
 };
 
 export default Main;

@@ -1,36 +1,62 @@
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import React, { useState } from "react";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { format, formatDistance, subHours } from "date-fns";
-import frLocale from "date-fns/locale/fr";
+import { Button, Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { differenceInHours, format, isAfter } from "date-fns";
 import BabyChangingStationIcon from "@mui/icons-material/BabyChangingStation";
-import { CheckBox } from "@mui/icons-material";
+import durationToString from "../lib/durationToString";
+import TimePicker from "./TimePicker";
+import axiosInstance from "../lib/axiosInstance";
+import { useSnackbar } from "notistack";
+import DateTimePicker from "./DateTimePicker";
 
 const Couche = () => {
-  const [heure, setHeure] = useState(new Date());
+  const [date, setDate] = useState(new Date());
   const [caca, setCaca] = useState(false);
+  const [now, setNow] = useState(new Date())
+  const [last, setLast] = useState({ date: new Date(), caca: false })
+  const [suspiciousDate, setSuspiciousDate] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
+
+  useEffect(() => {
+    setTimeout(() => { setNow(new Date()) }, 60000)
+  }, [now])
+
+  useEffect(() => {
+    const fetchLast = async () => {
+      const data = await axiosInstance.get('/couche/getlast')
+      setLast({ date: new Date(data.date), caca: data.caca })
+    }
+
+    fetchLast()
+  }, [])
+
+  const handleChangeDate = (newHour) => {
+    if (differenceInHours(new Date(), newHour) !== 0 && !suspiciousDate) {
+      setSuspiciousDate(true)
+      enqueueSnackbar("L'heure est lointaine, la date est maintenant modifiable")
+    }
+    setDate(newHour)
+  }
+
+  const handleSubmit = async () => {
+    const data = await axiosInstance.post('/couche/add', { date, caca })
+    if (isAfter(date, last.date)) setLast({ date: new Date(data.date), caca })
+  }
 
   return (
     <Stack direction="column" spacing={2}>
-      <Typography variant="h6" component="div">
-        <BabyChangingStationIcon /> Couche
-      </Typography>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+      >
+        <BabyChangingStationIcon />
+        <Typography variant="h6" component="div">
+          Couche
+        </Typography>
+      </Stack>
       <Typography>
         Dernière couche il y a{" "}
-        {formatDistance(new Date() - 15110000, new Date(), {
-          locale: frLocale,
-        })}{" "}
-        ({format(new Date() - 15110000, "H:mm")})
+        {durationToString({ start: last.date, end: now })} ({format(last.date, "H:mm")}) - {!last.caca && "pas"} 💩
       </Typography>
       <Stack
         direction="row"
@@ -38,26 +64,29 @@ const Couche = () => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <LocalizationProvider
-          dateAdapter={AdapterDateFns}
-          adapterLocale={frLocale}
-        >
+        {suspiciousDate ? (
+          <DateTimePicker
+            label="Beerk"
+            value={date}
+            onChange={handleChangeDate} />
+        ) : (
           <TimePicker
-            label="Beeerk"
-            value={heure}
-            onChange={(newValue) => {
-              setHeure(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} variant="standard" />
-            )}
+            label="Beerk"
+            value={date}
+            onChange={handleChangeDate}
           />
-        </LocalizationProvider>
+        )
+        }
         <FormControlLabel
           control={<Checkbox value={caca} onChange={() => setCaca(!caca)} />}
           label="💩"
+          labelPlacement="top"
         />
-        <Button>Envoyer</Button>
+        <Button
+          onClick={handleSubmit}
+        >
+          Envoyer
+        </Button>
       </Stack>
     </Stack>
   );

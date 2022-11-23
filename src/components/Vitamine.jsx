@@ -1,14 +1,14 @@
 import { Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { differenceInHours, format, isAfter } from "date-fns";
+import { differenceInHours, format, isAfter, isSameDay } from "date-fns";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import durationToString from "../lib/durationToString";
 import TimePicker from "./TimePicker";
 import axiosInstance from "../lib/axiosInstance";
 import { useSnackbar } from "notistack";
 import DateTimePicker from "./DateTimePicker";
+import MedicationIcon from '@mui/icons-material/Medication';
 
-const Biberon = () => {
+const Vitamine = () => {
   const [date, setDate] = useState(new Date());
   const [now, setNow] = useState(new Date())
   const [last, setLast] = useState({ date: new Date() })
@@ -16,12 +16,8 @@ const Biberon = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
-    setTimeout(() => { setNow(new Date()) }, 60000)
-  }, [now])
-
-  useEffect(() => {
     const fetchLast = async () => {
-      const data = await axiosInstance.get('/biberon/getlast')
+      const data = await axiosInstance.get('/vitamine/getlast')
       setLast({ date: new Date(data.date) })
     }
 
@@ -37,7 +33,7 @@ const Biberon = () => {
   }
 
   const handleSubmit = async () => {
-    const data = await axiosInstance.post('/biberon/add', { date })
+    const data = await axiosInstance.post('/vitamine/add', { date })
     if (isAfter(date, last.date)) setLast({ date: new Date(data.date) })
   }
 
@@ -48,42 +44,41 @@ const Biberon = () => {
         alignItems="center"
         spacing={1}
       >
-        <FastfoodIcon />
+        <MedicationIcon />
         <Typography variant="h6" component="div">
-          Biberon
+          Vitamine D
         </Typography>
       </Stack>
-      <Typography>
-        Dernier biberon il y a{" "}
-        {durationToString({ start: last.date, end: now })} ({format(last.date, "H:mm")})
-      </Typography>
       <Stack
         direction="row"
         spacing={2}
         alignItems="center"
         justifyContent="space-between"
       >
-        {suspiciousDate ? (
-          <DateTimePicker
-            label="Miam miam"
-            value={date}
-            onChange={handleChangeDate} />
-        ) : (
-          <TimePicker
-            label="Miam miam"
-            value={date}
-            onChange={handleChangeDate}
-          />
-        )
-        }
-        <Button
-          onClick={handleSubmit}
-        >
-          Envoyer
-        </Button>
+        {isSameDay(new Date(), last.date) ? (
+          <Typography sx={{ display: "flex", justifyContent: "center", width: "100%" }}>✔️ fait à {format(last.date, "H")}h</Typography>
+        ) : (<>
+          {suspiciousDate ? (
+            <DateTimePicker
+              label="Miam miam"
+              value={date}
+              onChange={handleChangeDate} />
+          ) : (
+            <TimePicker
+              label="Miam miam"
+              value={date}
+              onChange={handleChangeDate}
+            />
+          )}
+          <Button
+            onClick={handleSubmit}
+          >
+            {"C'est fait"}
+          </Button></>
+        )}
       </Stack>
     </Stack>
   );
 };
 
-export default Biberon;
+export default Vitamine;
