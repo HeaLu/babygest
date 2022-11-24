@@ -32,7 +32,7 @@ export const authOptions = {
     async signIn({ user, profile }) {
       if (
         profile.email === "louison.prugnaud@gmail.com" ||
-        profile.email === "lea.ramelotd@gmail.com"
+        profile.email === "lea.ramelot@gmail.com"
       ) {
         await dbConnect();
         const exist = await User.findOne({ email: user.email });
