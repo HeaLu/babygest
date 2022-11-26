@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserProvider";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import Layout from "./layout";
 
 const Main = ({ children }) => {
   const { user, auth } = useContext(UserContext);
@@ -19,9 +20,7 @@ const Main = ({ children }) => {
       router.push("/auth/signin?origin=" + router.asPath);
   });
 
-  if (user.email)
-    return <>{children}</>
-
+  if (user.email) return <Layout>{children}</Layout>;
 };
 
 export default Main;
