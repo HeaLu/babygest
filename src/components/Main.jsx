@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserProvider";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Layout from "./layout";
+import Layout from "./layout/Index";
 
 const Main = ({ children }) => {
   const { user, auth } = useContext(UserContext);
