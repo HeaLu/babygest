@@ -5,9 +5,9 @@ import dbConnect from "../../../src/lib/dbConnect";
 import startOfDay from "date-fns/startOfDay";
 
 export default async function handler(req, res) {
-  await dbConnect()
+  await dbConnect();
   const session = await unstable_getServerSession(req, res, authOptions);
-  const user = session.user._id
+  const user = session.user._id;
   if (!session)
     res
       .status(401)
@@ -36,9 +36,10 @@ export default async function handler(req, res) {
         return res.status(405).end(`Method ${method} Not Allowed`);
       }
       try {
-        if (!body.date) return res.status(400).json({ message: "Date manquante" });
-        const data = new Bain({ date: new Date(body.date), user })
-        await data.save()
+        if (!body.date)
+          return res.status(400).json({ message: "Date manquante" });
+        const data = new Bain({ date: new Date(body.date), user });
+        await data.save();
         return res.json(data);
       } catch (err) {
         return res.status(500).json({ message: "Erreur inconnue" });

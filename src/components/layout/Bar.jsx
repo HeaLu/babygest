@@ -9,11 +9,11 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
+import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 import Image from "next/image";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { UserContext } from "../contexts/UserProvider";
+import { UserContext } from "../../contexts/UserProvider";
 
 const Bar = () => {
   const { user, disconnect } = useContext(UserContext);

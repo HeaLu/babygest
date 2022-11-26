@@ -1,11 +1,10 @@
-import { Divider, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import Head from "next/head";
-import Bain from "../src/components/Bain";
-import Bar from "../src/components/Bar";
-import Biberon from "../src/components/Biberon";
-import Couche from "../src/components/Couche";
-import Evenement from "../src/components/Evenement";
-import Vitamine from "../src/components/Vitamine";
+import Bain from "../src/components/day/Bain";
+import Biberon from "../src/components/day/Biberon";
+import Couche from "../src/components/day/Couche";
+import Evenement from "../src/components/day/Evenement";
+import Vitamine from "../src/components/day/Vitamine";
 
 export default function Home() {
   return (
@@ -13,8 +12,7 @@ export default function Home() {
       <Head>
         <title>Choupiflex</title>
       </Head>
-      <Bar />
-      <Stack direction="column" spacing={3} m={2}>
+      <Stack direction="column" spacing={5} m={2}>
         <Biberon />
         <Couche />
         <Vitamine />
