@@ -1,9 +1,14 @@
-import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Box,
+  Paper,
+} from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import CreateIcon from "@mui/icons-material/Create";
 import TimelineIcon from "@mui/icons-material/Timeline";
-import Link from "../utils/Link";
+import Link from "next/link";
 
 const Navigation = () => {
   const router = useRouter();
@@ -15,7 +20,12 @@ const Navigation = () => {
 
   return (
     <Paper
-      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+      }}
       elevation={3}
     >
       <BottomNavigation value={value} showLabels>
