@@ -7,12 +7,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import GoogleIcon from "@mui/icons-material/Google";
-import {
-  useSession,
-  getProviders,
-  signIn,
-  getCsrfToken,
-} from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import Stack from "@mui/material/Stack";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -36,7 +31,7 @@ const DisplayError = ({ error }) => {
       return <Alert severity="warning">Erreur lors de la connexion</Alert>;
   }
 };
-export default function SignIn({ csrfToken, providers }) {
+export default function SignIn() {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -90,33 +85,17 @@ export default function SignIn({ csrfToken, providers }) {
                   <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
                     <LockOutlinedIcon />
                   </Avatar>
-
                   <Typography component="h1" variant="h5">
-                    Connexion
+                    Choupiflex
                   </Typography>
-                  {providers &&
-                    Object.values(providers).map((provider) => (
-                      <div key={provider.name} style={{ marginBottom: 0 }}>
-                        <input
-                          name="csrfToken"
-                          type="hidden"
-                          defaultValue={csrfToken}
-                        />
-                        <input
-                          name="callbackUrl"
-                          type="hidden"
-                          defaultValue={router.query.origin}
-                        />
-                        <Button
-                          onClick={() => signIn(provider.id)}
-                          variant="contained"
-                          type="submit"
-                          endIcon={<GoogleIcon />}
-                        >
-                          Se connecter
-                        </Button>
-                      </div>
-                    ))}
+                  <Button
+                    onClick={() => signIn("google")}
+                    variant="contained"
+                    type="submit"
+                    endIcon={<GoogleIcon />}
+                  >
+                    Se connecter
+                  </Button>
                 </Stack>
                 <Box sx={{ justifyContent: "center", display: "flex" }}>
                   {router.query.error && (
@@ -130,12 +109,4 @@ export default function SignIn({ csrfToken, providers }) {
       </>
     );
   }
-}
-
-export async function getServerSideProps(context) {
-  const providers = await getProviders();
-  const csrfToken = await getCsrfToken(context);
-  return {
-    props: { providers, csrfToken },
-  };
 }
