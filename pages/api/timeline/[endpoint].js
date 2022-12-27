@@ -6,16 +6,17 @@ import Couche from "../../../src/schemas/CoucheSchema";
 import Biberon from "../../../src/schemas/BiberonSchema";
 import Evenement from "../../../src/schemas/EvenementSchema";
 import dbConnect from "../../../src/lib/dbConnect";
-import startOfDay from "date-fns/startOfDay";
-import { endOfDay } from "date-fns";
+import { endOfDay, subDays, subHours, startOfDay } from "date-fns";
 
-async function getByDates(start, end) {
+async function getByDates(start = subHours(new Date(), 24), end = new Date()) {
   try {
     const models = [Bain, Biberon, Vitamine, Couche, Evenement];
 
     let retour = [];
     for (const model of models) {
-      const data = await model.find({ $gte: start, $lte: end }).lean();
+      const data = await model
+        .find({ date: { $gte: new Date(start), $lte: new Date(end) } })
+        .lean();
       data.forEach((item) => {
         item.type = model.collection.collectionName;
       });
@@ -38,17 +39,14 @@ export default async function handler(req, res) {
   const { method, query } = req;
   switch (endpoint) {
     case "getperiod":
+      const start = query.start || subDays(new Date(), 300);
+      const end = query.end || new Date();
       if (method !== "GET") {
         res.setHeader("Allow", ["GET"]);
         return res.status(405).end(`Method ${method} Not Allowed`);
       }
-      if (!query.start || !query.end)
-        return res.status(400).json({ message: "Date manquante" });
       try {
-        const data = await getByDates(
-          new Date(query.start),
-          new Date(query.end)
-        );
+        const data = await getByDates(start, end);
         return res.json(data);
       } catch (err) {
         return res.status(500).json({ message: "Erreur inconnue" });

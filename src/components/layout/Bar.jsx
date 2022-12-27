@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,14 +13,14 @@ import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 import Image from "next/image";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { UserContext } from "../../contexts/UserProvider";
+import { signOut, useSession } from "next-auth/react";
 
 const Bar = () => {
-  const { user, disconnect } = useContext(UserContext);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const { data: session } = useSession();
 
   const handleDisconnect = () => {
-    disconnect();
+    signOut();
   };
 
   const handleOpenUserMenu = (event) => {
@@ -54,12 +54,16 @@ const Bar = () => {
           >
             {process.env.NEXT_PUBLIC_PRENOM}
           </Typography>
-          {user.prenom !== "" && (
+          {session.user.prenom !== "" && (
             <Box>
-              <Tooltip title={user.prenom || "Utilisateur"}>
+              <Tooltip title={session.user.prenom || "Utilisateur"}>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={user.prenom}>
-                    <Image src={user.image} alt={user.prenom || ""} fill />
+                  <Avatar alt={session.user.prenom}>
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.prenom || ""}
+                      fill
+                    />
                   </Avatar>
                 </IconButton>
               </Tooltip>

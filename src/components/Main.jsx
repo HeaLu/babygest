@@ -1,26 +1,21 @@
-import React, { useContext, useEffect } from "react";
-import { UserContext } from "../contexts/UserProvider";
+import React from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import Layout from "./layout/Index";
+import Page403 from "./Page403";
 
 const Main = ({ children }) => {
-  const { user, auth } = useContext(UserContext);
-  const router = useRouter();
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    if (session) {
-      auth(session.user);
-    }
-  }, [session, auth]);
-
-  useEffect(() => {
-    if (router.isReady && !session)
-      router.push("/auth/signin?origin=" + router.asPath);
-  });
-
-  if (user.email) return <Layout>{children}</Layout>;
+  const { data: session, status } = useSession({ required: true });
+  if (status === "loading") {
+    return <div>Chargement...</div>;
+  }
+  if (!session) {
+    return (
+      <Layout>
+        <Page403 />
+      </Layout>
+    );
+  }
+  return <Layout>{children}</Layout>;
 };
 
 export default Main;

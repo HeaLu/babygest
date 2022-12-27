@@ -1,5 +1,5 @@
 import { Button, Stack, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { differenceInHours } from "date-fns";
 import MessageIcon from "@mui/icons-material/Message";
 import TimePicker from "../utils/TimePicker";
@@ -12,6 +12,14 @@ const Evenement = () => {
   const [message, setMessage] = useState("");
   const [suspiciousDate, setSuspiciousDate] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [isModifiedDate, setIsModifiedDate] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (!isModifiedDate) setDate(new Date());
+      setDate(new Date());
+    }, 60000);
+  }, [isModifiedDate]);
 
   const handleChangeDate = (newHour) => {
     if (differenceInHours(new Date(), newHour) !== 0 && !suspiciousDate) {
@@ -20,6 +28,7 @@ const Evenement = () => {
         "L'heure est lointaine, la date est maintenant modifiable"
       );
     }
+    setIsModifiedDate(true);
     setDate(newHour);
   };
 
@@ -31,7 +40,7 @@ const Evenement = () => {
   return (
     <Stack direction="column" spacing={2}>
       <Stack direction="row" alignItems="center" spacing={1}>
-        <MessageIcon />
+        <MessageIcon color="evenements" />
         <Typography variant="h6" component="div">
           Évènement
         </Typography>
@@ -51,14 +60,14 @@ const Evenement = () => {
         ) : (
           <TimePicker label="Quand" value={date} onChange={handleChangeDate} />
         )}
-        <TextField
-          label="Message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          multiline
-        />
         <Button onClick={handleSubmit}>Envoyer</Button>
       </Stack>
+      <TextField
+        label="Quoi"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        multiline
+      />
     </Stack>
   );
 };

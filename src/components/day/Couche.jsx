@@ -21,12 +21,14 @@ const Couche = () => {
   const [last, setLast] = useState({ date: new Date(), caca: false });
   const [suspiciousDate, setSuspiciousDate] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [isModifiedDate, setIsModifiedDate] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
+      if (!isModifiedDate) setDate(new Date());
       setNow(new Date());
     }, 60000);
-  }, [now]);
+  }, [now, isModifiedDate]);
 
   useEffect(() => {
     const fetchLast = async () => {
@@ -44,6 +46,7 @@ const Couche = () => {
         "L'heure est lointaine, la date est maintenant modifiable"
       );
     }
+    setIsModifiedDate(true);
     setDate(newHour);
   };
 
@@ -55,7 +58,7 @@ const Couche = () => {
   return (
     <Stack direction="column" spacing={2}>
       <Stack direction="row" alignItems="center" spacing={1}>
-        <BabyChangingStationIcon />
+        <BabyChangingStationIcon color="couches" />
         <Typography variant="h6" component="div">
           Couche
         </Typography>

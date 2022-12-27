@@ -29,6 +29,7 @@ const Vitamine = () => {
         "L'heure est lointaine, la date est maintenant modifiable"
       );
     }
+    setIsModifiedDate(true);
     setDate(newHour);
   };
 
@@ -40,7 +41,7 @@ const Vitamine = () => {
   return (
     <Stack direction="column" spacing={2}>
       <Stack direction="row" alignItems="center" spacing={1}>
-        <MedicationIcon />
+        <MedicationIcon color="vitamines" />
         <Typography variant="h6" component="div">
           Vitamine D
         </Typography>

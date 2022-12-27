@@ -14,12 +14,14 @@ const Biberon = () => {
   const [last, setLast] = useState({ date: new Date() });
   const [suspiciousDate, setSuspiciousDate] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [isModifiedDate, setIsModifiedDate] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
+      if (!isModifiedDate) setDate(new Date());
       setNow(new Date());
     }, 60000);
-  }, [now]);
+  }, [now, isModifiedDate]);
 
   useEffect(() => {
     const fetchLast = async () => {
@@ -37,6 +39,7 @@ const Biberon = () => {
         "L'heure est lointaine, la date est maintenant modifiable"
       );
     }
+    setIsModifiedDate(true);
     setDate(newHour);
   };
 
@@ -48,7 +51,7 @@ const Biberon = () => {
   return (
     <Stack direction="column" spacing={2}>
       <Stack direction="row" alignItems="center" spacing={1}>
-        <FastfoodIcon />
+        <FastfoodIcon color="biberons" />
         <Typography variant="h6" component="div">
           Biberon
         </Typography>
