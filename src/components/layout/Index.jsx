@@ -6,7 +6,7 @@ import { Box } from "@mui/system";
 
 const Layout = ({ children }) => {
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="sm" disableGutters={true}>
       <Bar />
       <Box sx={{ pb: 7 }}>
         {children}
