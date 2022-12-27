@@ -2,6 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   images: { domains: ["lh3.googleusercontent.com"] },
+  i18n: {
+    locales: ["fr"],
+    defaultLocale: "fr",
+  },
 };
 
 module.exports = nextConfig;
