@@ -16,7 +16,26 @@ import {
 import Stack from "@mui/material/Stack";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { Alert } from "@mui/material";
 
+const DisplayError = ({ error }) => {
+  switch (error) {
+    case "SessionRequired":
+      return <></>;
+    case "AccessDenied":
+      return <Alert severity="error">Accès non autorisé</Alert>;
+    case "Disconnected":
+      return <Alert severity="info">Vous avez été déconnecté(e)</Alert>;
+    case "Verification":
+      return (
+        <Alert severity="error">
+          {"Cet accès n'est plus valide, merci de renouveler l'opération"}
+        </Alert>
+      );
+    default:
+      return <Alert severity="warning">Erreur lors de la connexion</Alert>;
+  }
+};
 export default function SignIn({ csrfToken, providers }) {
   const { data: session } = useSession();
   const router = useRouter();
@@ -99,6 +118,11 @@ export default function SignIn({ csrfToken, providers }) {
                       </div>
                     ))}
                 </Stack>
+                <Box sx={{ justifyContent: "center", display: "flex" }}>
+                  {router.query.error && (
+                    <DisplayError error={router.query.error} />
+                  )}
+                </Box>
               </Stack>
             </Box>
           </Grid>
