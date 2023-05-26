@@ -39,7 +39,7 @@ export default async function handler(req, res) {
   const { method, query } = req;
   switch (endpoint) {
     case "getperiod":
-      const start = query.start || subDays(new Date(), 300);
+      const start = query.start || subDays(new Date(), 15);
       const end = query.end || new Date();
       if (method !== "GET") {
         res.setHeader("Allow", ["GET"]);

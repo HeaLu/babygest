@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Layout from "./layout/Index";
 import Page403 from "./Page403";
@@ -15,6 +15,7 @@ const Main = ({ children }) => {
       </Layout>
     );
   }
+
   return <Layout>{children}</Layout>;
 };
 
