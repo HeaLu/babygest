@@ -8,7 +8,7 @@ import axiosInstance from "../../lib/axiosInstance";
 import { useSnackbar } from "notistack";
 import DateTimePicker from "../utils/DateTimePicker";
 
-const Biberon = () => {
+const Repas = () => {
   const [date, setDate] = useState(new Date());
   const [now, setNow] = useState(new Date());
   const [last, setLast] = useState({ date: new Date() });
@@ -25,7 +25,7 @@ const Biberon = () => {
 
   useEffect(() => {
     const fetchLast = async () => {
-      const data = await axiosInstance.get("/biberon/getlast");
+      const data = await axiosInstance.get("/repas/getlast");
       setLast({ date: new Date(data.date) });
     };
 
@@ -44,7 +44,7 @@ const Biberon = () => {
   };
 
   const handleSubmit = async () => {
-    const data = await axiosInstance.post("/biberon/add", { date });
+    const data = await axiosInstance.post("/repas/add", { date });
     if (isAfter(date, last.date)) setLast({ date: new Date(data.date) });
   };
 
@@ -53,13 +53,12 @@ const Biberon = () => {
       <Stack direction="row" alignItems="center" spacing={1}>
         <FastfoodIcon color="biberons" />
         <Typography variant="h6" component="div">
-          Biberon
+          Repas
         </Typography>
       </Stack>
       <Typography>
-        Dernier biberon il y a{" "}
-        {durationToString({ start: last.date, end: now })} (
-        {format(last.date, "H:mm")})
+        Dernier repas il y a {durationToString({ start: last.date, end: now })}{" "}
+        ({format(last.date, "H:mm")})
       </Typography>
       <Stack
         direction="row"
@@ -86,4 +85,4 @@ const Biberon = () => {
   );
 };
 
-export default Biberon;
+export default Repas;
