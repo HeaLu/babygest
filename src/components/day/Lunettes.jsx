@@ -1,10 +1,11 @@
-import { differenceInDays } from "date-fns";
+import { differenceInWeeks } from "date-fns";
 
 const Lunettes = () => {
-  const nbJour = differenceInDays(new Date(), new Date(2024, 0, 1)) % 2;
+  const nbJour = differenceInWeeks(new Date(), new Date(2024, 9, 14)) % 2;
+
   return (
     <p style={{ textAlign: "center" }}>
-      {"Aujourd'hui c'est "}
+      {"Cette semaine c'est "}
       {nbJour ? (
         <span style={{ color: "SkyBlue" }}>lunettes bleues</span>
       ) : (
