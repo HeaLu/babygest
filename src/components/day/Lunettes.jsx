@@ -7,9 +7,9 @@ const Lunettes = () => {
     <p style={{ textAlign: "center" }}>
       {"Cette semaine c'est "}
       {nbJour ? (
-        <span style={{ color: "SkyBlue" }}>lunettes bleues</span>
-      ) : (
         <span style={{ color: "LightGrey" }}>lunettes grises</span>
+      ) : (
+        <span style={{ color: "SkyBlue" }}>lunettes bleues</span>
       )}
       .
     </p>
